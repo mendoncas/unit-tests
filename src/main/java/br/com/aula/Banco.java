@@ -3,9 +3,7 @@ package br.com.aula;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.aula.exception.ContaJaExistenteException;
-import br.com.aula.exception.ContaNaoExistenteException;
-import br.com.aula.exception.ContaSemSaldoException;
+import br.com.aula.exception.*;
 
 public class Banco {
 
@@ -19,7 +17,10 @@ public class Banco {
 	}
 
 
-	public void cadastrarConta(Conta conta) throws ContaJaExistenteException {
+	public void cadastrarConta(Conta conta) throws ContaJaExistenteException, NumeroDeContaInvalidoException {
+		if (conta.getNumeroConta() < 0) {
+			throw new NumeroDeContaInvalidoException();
+		}
 
 		for (Conta c : contas) {
 			boolean isNomeClienteIgual = c.getCliente().getNome().equals(conta.getCliente().getNome());
@@ -28,21 +29,25 @@ public class Banco {
 			if (isNomeClienteIgual || isNumeroContaIgual) {
 				throw new ContaJaExistenteException();
 			}
+
 		}
-		
+//		throw new NumeroDeContaInvalidoException();
 		this.contas.add(conta);
 
 	}
 
 	public void efetuarTransferencia(int numeroContaOrigem, int numeroContaDestino, int valor)
-			throws ContaNaoExistenteException, ContaSemSaldoException {
+			throws ContaNaoExistenteException, ContaSemSaldoException, ValorNegativoException {
 
 		Conta contaOrigem = this.obterContaPorNumero(numeroContaOrigem);
 		Conta contaDestino = this.obterContaPorNumero(numeroContaDestino);
 
+
 		boolean isContaOrigemExistente = contaOrigem != null;
 		boolean isContaDestinoExistente = contaDestino != null;
 
+		if (valor < 0)
+			throw new ValorNegativoException();
 		if (isContaOrigemExistente && isContaDestinoExistente) {
 
 			boolean isContaOrigemPoupança = contaOrigem.getTipoConta().equals(TipoConta.POUPANCA);

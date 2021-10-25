@@ -20,7 +20,7 @@ public class ContaTest {
 
 		// Verificação
 		assertEquals(15, c.getSaldo());
-		assertThat(c.getSaldo(), is(15));
+//		assertThat(c.getSaldo(), is(15));
 	}
 
 }
